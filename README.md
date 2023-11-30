@@ -1,11 +1,15 @@
 # GMCMotionWarping
 Epic's Motion Warping plugin for UE5 but edited to work with the General Movement Component
-
+  
+## Links
+GMC: https://www.unrealengine.com/marketplace/en-US/product/general-movement-component  
+Unreal on Github: https://www.unrealengine.com/en-US/ue-on-github  
+  
 ## Warning
 This is still a work in progress and isn't fully functional for MP at all  
 
 ## Getting Started  
-
+  
 There are a couple of required steps to get this up and running:
 1. Add this plugin and make sure its enabled (you'll need to compile it)
 2. Implement the IGMCMotionWarpInterface on your APawn and override the functions in that interface (example at the bottom of the readme)
@@ -29,10 +33,8 @@ it should replace this line
 ```
 RootMotionParams.Set(SkeletalMesh->ConvertLocalRootMotionToWorld
 ```
-5. Proceed using motion warping like you usually would! (It only works with the gmc's playmontage functionality)
 
-GMC: https://www.unrealengine.com/marketplace/en-US/product/general-movement-component  
-Unreal on Github: https://www.unrealengine.com/en-US/ue-on-github  
+5. Proceed using motion warping like you usually would! (It only works with the gmc's playmontage functionality)
 
 ### Here's an example of the functions you should override in your pawn
 ```
