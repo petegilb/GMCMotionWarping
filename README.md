@@ -2,9 +2,9 @@
 Epic's Motion Warping plugin for UE5 but edited to work with the General Movement Component
 
 ## Warning
-This is still a work in progress and isn't fully functional for MP at all
+This is still a work in progress and isn't fully functional for MP at all  
 
-## Getting Started
+## Getting Started  
 
 There are a couple of required steps to get this up and running:
 1. Add this plugin and make sure its enabled (you'll need to compile it)
@@ -31,5 +31,5 @@ RootMotionParams.Set(SkeletalMesh->ConvertLocalRootMotionToWorld
 ```
 5. Proceed using motion warping like you usually would! (It only works with the gmc's playmontage functionality)
 
-GMC: https://www.unrealengine.com/marketplace/en-US/product/general-movement-component
-Unreal on Github: https://www.unrealengine.com/en-US/ue-on-github
+GMC: https://www.unrealengine.com/marketplace/en-US/product/general-movement-component  
+Unreal on Github: https://www.unrealengine.com/en-US/ue-on-github  
