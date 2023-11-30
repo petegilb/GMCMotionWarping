@@ -8,7 +8,7 @@ This is still a work in progress and isn't fully functional for MP at all
 
 There are a couple of required steps to get this up and running:
 1. Add this plugin and make sure its enabled (you'll need to compile it)
-2. Implement the IGMCMotionWarpInterface on your APawn and override the functions in that interface (will post an example later)
+2. Implement the IGMCMotionWarpInterface on your APawn and override the functions in that interface (example at the bottom of the readme)
 3. Add a delegate to the GMCOrganicMovementComponent header file:
 ```
 DECLARE_DELEGATE_RetVal_ThreeParams(FTransform, FOnProcessRootMotion, const FTransform&, UGMC_OrganicMovementCmp*, float)
@@ -33,3 +33,26 @@ RootMotionParams.Set(SkeletalMesh->ConvertLocalRootMotionToWorld
 
 GMC: https://www.unrealengine.com/marketplace/en-US/product/general-movement-component  
 Unreal on Github: https://www.unrealengine.com/en-US/ue-on-github  
+
+### Here's an example of the functions you should override in your pawn
+```
+USkeletalMeshComponent* ATSS_PawnBase::GetMotionWarpMesh(){
+	return Mesh;
+}
+
+float ATSS_PawnBase::GetCollisionHalfHeight(){
+	return Capsule->GetScaledCapsuleHalfHeight();
+}
+
+FQuat ATSS_PawnBase::GetRotationOffset(){
+	return Mesh->GetRelativeRotation().Quaternion();
+}
+
+FVector ATSS_PawnBase::GetTranslationOffset(){
+	return Mesh->GetRelativeLocation();
+}
+
+UGMC_OrganicMovementCmp* ATSS_PawnBase::GetOrganicMovementCmp(){
+	return GMC;
+}
+```
