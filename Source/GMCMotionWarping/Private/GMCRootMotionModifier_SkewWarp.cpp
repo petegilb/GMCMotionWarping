@@ -2,6 +2,7 @@
 
 #include "GMCRootMotionModifier_SkewWarp.h"
 #include "DrawDebugHelpers.h"
+#include "GMCLog.h"
 #include "GMCMotionWarpingComponent.h"
 #include "GMCMotionWarpInterface.h"
 #include UE_INLINE_GENERATED_CPP_BY_NAME(GMCRootMotionModifier_SkewWarp)
@@ -13,7 +14,6 @@ URootMotionModifier_SkewWarp::URootMotionModifier_SkewWarp(const FObjectInitiali
 
 FVector URootMotionModifier_SkewWarp::WarpTranslation(const FTransform& CurrentTransform, const FVector& DeltaTranslation, const FVector& TotalTranslation, const FVector& TargetLocation)
 {
-	UE_LOG(LogTemp, Warning, TEXT("we out here warping translations in skew warp"))
 	if (!DeltaTranslation.IsNearlyZero())
 	{
 		const FQuat CurrentRotation = CurrentTransform.GetRotation();
@@ -163,6 +163,7 @@ FTransform URootMotionModifier_SkewWarp::ProcessRootMotion(const FTransform& InR
 
 				const FVector WarpedTranslation = WarpTranslation(FTransform::Identity, DeltaTranslation, TotalTranslation, TargetLocation) + ExtraRootMotion.GetLocation();
 				FinalRootMotion.SetTranslation(WarpedTranslation);
+				UE_LOG(LogTemp, Warning, TEXT("%s : Current Location %s | Target Location %s | Warped Location %s"), *GetNetModeAsString(CharacterOwner->GetNetMode()), *CurrentLocation.ToCompactString(), *TargetLocation.ToCompactString(), *WarpedTranslation.ToString())
 			}
 		}
 		// if there is no translation in the animation, add it
@@ -184,6 +185,8 @@ FTransform URootMotionModifier_SkewWarp::ProcessRootMotion(const FTransform& InR
 				FinalDeltaTranslation = MotionWarpInterfacePawn->GetRotationOffset().UnrotateVector(FinalDeltaTranslation);
 
 				FinalRootMotion.SetTranslation(FinalDeltaTranslation + ExtraRootMotion.GetLocation());
+				UE_LOG(LogMotionWarping, Warning, TEXT("MotionWarping (%s): [%f %f] [previous %f current %f] [alpha %f] final %s"), *GetNetModeAsString(CharacterOwner->GetNetMode()), StartTime, EndTime, PreviousPosition, CurrentPosition, Alpha, *FinalRootMotion.GetTranslation().ToCompactString());
+				// UE_LOG(LogTemp, Warning, TEXT("%s : Current Location %s | Final Location %s | Alpha %f"), *GetNetModeAsString(CharacterOwner->GetNetMode()), *CurrentLocation.ToCompactString(), *FinalRootMotion.GetTranslation().ToCompactString(), Alpha)
 			}
 		}
 	}

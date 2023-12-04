@@ -282,49 +282,36 @@ void UMotionWarpingComponent::Update(float DeltaSeconds)
 	if(!GMC) return;
 	
 	// When replaying saved moves we need to look at the contributor to root motion back then.
-	// if (GMC->CL_IsReplaying())
-	// {
-	// 	const UGMC_OrganicMovementCmp* MoveComp = Cast<UGMC_OrganicMovementCmp>(Character->GetMovementComponent());
-	// 	check(MoveComp);
-	//
-	// 	GMC->MoveHistory
-	//
-	// 	const FSavedMove_Character* SavedMove = MoveComp->GetCurrentReplayedSavedMove();
-	// 	check(SavedMove);
-	//
-	// 	if(SavedMove->RootMotionMontage.IsValid())
-	// 	{
-	// 		Context.Animation = SavedMove->RootMotionMontage.Get();
-	// 		Context.CurrentPosition = SavedMove->RootMotionTrackPosition;
-	// 		Context.PreviousPosition = SavedMove->RootMotionPreviousTrackPosition;
-	// 		Context.PlayRate = SavedMove->RootMotionPlayRateWithScale;
-	// 	}
-	// }
-	// TODO: figure out how to fix the above stuff and uncomment below stuff
-	// else // If we are not replaying a move, just use the current root motion montage
-	// {
-	// 	if(FAnimMontageInstance* RootMotionMontageInstance = MotionWarpInterfacePawn->GetRootMotionAnimMontageInstance(MotionWarpInterfacePawn->GetMotionWarpMesh()))
-	// 	{
-	// 		const UAnimMontage* Montage = RootMotionMontageInstance->Montage;
-	// 		check(Montage);
-	//
-	// 		Context.Animation = Montage;
-	// 		Context.CurrentPosition = RootMotionMontageInstance->GetPosition();
-	// 		Context.PreviousPosition = RootMotionMontageInstance->GetPreviousPosition();
-	// 		Context.Weight = RootMotionMontageInstance->GetWeight();
-	// 		Context.PlayRate = RootMotionMontageInstance->Montage->RateScale * RootMotionMontageInstance->GetPlayRate();
-	// 	}
-	// }
-	if(FAnimMontageInstance* RootMotionMontageInstance = MotionWarpInterfacePawn->GetRootMotionAnimMontageInstance(MotionWarpInterfacePawn->GetMotionWarpMesh()))
+	if (GMC->CL_IsReplaying())
 	{
-		const UAnimMontage* Montage = RootMotionMontageInstance->Montage;
-		check(Montage);
+		const UGMC_OrganicMovementCmp* MoveComp = Cast<UGMC_OrganicMovementCmp>(Character->GetMovementComponent());
+		check(MoveComp);
 
-		Context.Animation = Montage;
-		Context.CurrentPosition = RootMotionMontageInstance->GetPosition();
-		Context.PreviousPosition = RootMotionMontageInstance->GetPreviousPosition();
-		Context.Weight = RootMotionMontageInstance->GetWeight();
-		Context.PlayRate = RootMotionMontageInstance->Montage->RateScale * RootMotionMontageInstance->GetPlayRate();
+		const FGMC_Move& LastMove = MoveComp->MoveHistory.Last();
+	
+		// if(UAnimMontage* MontageRef = LastMove.OutputState.AnimMontageReference.Read())
+		// {
+		// 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("we are replaying"));
+		// 	Context.Animation = MontageRef;
+		// 	// Context.CurrentPosition = LastMove->RootMotionTrackPosition;
+		// 	// Context.PreviousPosition = LastMove->RootMotionPreviousTrackPosition;
+		// 	Context.PlayRate = MontageRef->RateScale;
+		// }
+	}
+	// TODO: figure out how to fix the above stuff and uncomment below stuff
+	else // If we are not replaying a move, just use the current root motion montage
+	{
+		if(FAnimMontageInstance* RootMotionMontageInstance = MotionWarpInterfacePawn->GetRootMotionAnimMontageInstance(MotionWarpInterfacePawn->GetMotionWarpMesh()))
+		{
+			const UAnimMontage* Montage = RootMotionMontageInstance->Montage;
+			check(Montage);
+	
+			Context.Animation = Montage;
+			Context.CurrentPosition = RootMotionMontageInstance->GetPosition();
+			Context.PreviousPosition = RootMotionMontageInstance->GetPreviousPosition();
+			Context.Weight = RootMotionMontageInstance->GetWeight();
+			Context.PlayRate = RootMotionMontageInstance->Montage->RateScale * RootMotionMontageInstance->GetPlayRate();
+		}
 	}
 
 	if (Context.Animation.IsValid())
@@ -452,7 +439,6 @@ FTransform UMotionWarpingComponent::ProcessRootMotionPreConvertToWorld(const FTr
 		if (Modifier->GetState() == ERootMotionModifierState::Active)
 		{
 			FinalRootMotion = Modifier->ProcessRootMotion(FinalRootMotion, DeltaSeconds);
-			// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("skew warp FinalRootMotionTranslation: %s , rotation: %s"), *FinalRootMotion.GetTranslation().ToString(), *FinalRootMotion.GetRotation().ToString()));
 		}
 	}
 
