@@ -22,8 +22,8 @@ FOnProcessRootMotion ProcessRootMotionPreConvertToWorld;
 4. Execute that delegate and add to the root motion animation transform by putting the following code in the MontageUpdate function.
 ```
 // Root motion calculations from motion warping
-FTransform PreProcessedRootMotion = ProcessRootMotionPreConvertToWorld.IsBound() ? ProcessRootMotionPreConvertToWorld.Execute(RootMotionParams.GetRootMotionTransform(), this, DeltaSeconds) : FTransform();
-FTransform WorldSpaceRootMotionTransform = SkeletalMesh->ConvertLocalRootMotionToWorld(RootMotionParams.GetRootMotionTransform() + PreProcessedRootMotion);
+FTransform PreProcessedRootMotion = ProcessRootMotionPreConvertToWorld.IsBound() ? ProcessRootMotionPreConvertToWorld.Execute(RootMotionParams.GetRootMotionTransform(), this, DeltaSeconds) : RootMotionParams.GetRootMotionTransform();
+FTransform WorldSpaceRootMotionTransform = SkeletalMesh->ConvertLocalRootMotionToWorld(PreProcessedRootMotion);
 
 // Save the root motion transform in world space.
 RootMotionParams.Set(WorldSpaceRootMotionTransform);
